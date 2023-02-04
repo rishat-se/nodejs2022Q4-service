@@ -1,33 +1,28 @@
-import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from '../entities/user.entity';
-import { v4 as uuidv4 } from 'uuid';
 import { UsersDb } from '../interfaces/users-db.interface';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class InMemoryUserDb implements UsersDb {
-  //private users: User[];
+  private users: User[];
 
-  private users: User[] = [
-    {
-      id: 'userId',
-      login: 'john',
-      password: 'ajshnenw',
-      version: 0,
-      createdAt: 111111111,
-      updatedAt: 222222222,
-    },
-  ];
+  constructor() {
+    this.users = [];
+  }
 
-  create(createUserDto: CreateUserDto) {
-    const user: User = {
-      id: uuidv4(),
-      ...createUserDto,
-      version: 0,
-      createdAt: Date.now(),
-    };
+  // private users: User[] = [
+  //   {
+  //     id: '390eeca6-1ae1-45ea-9cdb-71065b110825',
+  //     login: 'john',
+  //     password: 'ajshnenw',
+  //     version: 0,
+  //     createdAt: 111111111,
+  //     updatedAt: 222222222,
+  //   },
+  // ];
+
+  create(user: User) {
     this.users.push(user);
-    return user;
   }
 
   findAll() {
@@ -35,15 +30,18 @@ export class InMemoryUserDb implements UsersDb {
   }
 
   findOne(id: string) {
-    return this.users.find((key) => key.id === id);
+    return this.users.find((item) => item.id === id);
   }
 
-  update(id: string, updateUserDto: UpdatePasswordDto) {
-    const user = this.users.find((key) => key.id === id);
-    return { ...user, ...updateUserDto };
+  update(user: User) {
+    const idx = this.users.findIndex((item) => item.id === user.id);
+    if (idx === -1) throw new Error('Not found');
+    this.users.splice(idx, 1, user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    const idx = this.users.findIndex((item) => item.id === id);
+    if (idx === -1) throw new Error('Not found');
+    this.users.splice(idx, 1);
   }
 }
