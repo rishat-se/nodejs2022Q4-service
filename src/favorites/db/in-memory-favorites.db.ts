@@ -21,6 +21,10 @@ export class InMemoryFavoritesDB {
     return this.favorites;
   }
 
+  findArtist(id: string) {
+    return this.favorites.artists.find((id) => id === id);
+  }
+
   addArtist(id: string) {
     this.favorites.artists.push(id);
   }

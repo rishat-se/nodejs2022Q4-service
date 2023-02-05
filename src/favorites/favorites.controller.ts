@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
@@ -18,7 +20,20 @@ export class FavoritesController {
 
   @Post('artist/:id')
   create(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.favoritesService.addArtist(id);
+    try {
+      return this.favoritesService.addArtist(id);
+    } catch (err) {
+      // if (err instanceof Error && err.message === 'id already exists') {
+      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException(
+          'user not found',
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      } else {
+        throw err;
+      }
+    }
   }
 
   @Get()

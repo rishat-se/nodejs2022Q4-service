@@ -20,6 +20,10 @@ export class FavoritesService {
   }
 
   addArtist(id: string) {
+    const artist = this.artistsDb.findOne(id);
+    if (!artist) throw new Error('entity not found');
+    // const artistInFavs = this.favoritesDB.findArtist(id);
+    // if (artistInFavs) throw new Error('id already exists');
     this.favoritesDB.addArtist(id);
   }
 
