@@ -3,6 +3,7 @@ import { Artist } from '../entities/artist.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { ArtistsDb } from '../interfaces/artists-db.interface';
 import { Injectable } from '@nestjs/common';
+import { UpdatePasswordDto } from 'src/users/dto/update-password.dto';
 
 @Injectable()
 export class InMemoryArtistsDb implements ArtistsDb {

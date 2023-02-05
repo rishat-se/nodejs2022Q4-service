@@ -5,11 +5,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private usersDb: InMemoryUserDb,
+    private usersDB: InMemoryUserDb,
     private artistsDb: InMemoryArtistsDb,
   ) {}
 
@@ -21,26 +22,33 @@ export class UsersService {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
-    this.usersDb.create(newUser);
+    this.usersDB.create(newUser);
     return newUser;
   }
 
   findAll() {
-    return this.usersDb.findAll();
+    return this.usersDB.findAll();
   }
 
   findOne(id: string) {
-    return this.usersDb.findOne(id);
+    const user = this.usersDB.findOne(id);
+    if (!user) throw new Error('entity not found');
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    // const user = this.users.find((key) => key.id === id);
-    // return { ...user, ...updateUserDto };
-
-    return `This action updates a #${id} user`;
+  update(id: string, updateUserDto: UpdatePasswordDto) {
+    const user = this.usersDB.findOne(id);
+    if (!user) throw new Error('entity not found');
+    if (user.password !== updateUserDto.oldPassword)
+      throw new Error('old password is wrong');
+    const updUser = { ...user, password: updateUserDto.newPassword };
+    updUser.version++;
+    updUser.updatedAt = Date.now();
+    this.usersDB.update(updUser);
+    return updUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    this.usersDB.remove(id);
   }
 }

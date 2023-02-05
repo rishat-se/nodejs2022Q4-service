@@ -1,9 +1,9 @@
 import { User } from '../entities/user.entity';
-import { UsersDb } from '../interfaces/users-db.interface';
+import { UsersDB } from '../interfaces/users-db.interface';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class InMemoryUserDb implements UsersDb {
+export class InMemoryUserDb implements UsersDB {
   private users: User[];
 
   constructor() {
@@ -35,13 +35,13 @@ export class InMemoryUserDb implements UsersDb {
 
   update(user: User) {
     const idx = this.users.findIndex((item) => item.id === user.id);
-    if (idx === -1) throw new Error('Not found');
+    if (idx === -1) throw new Error('entity not found');
     this.users.splice(idx, 1, user);
   }
 
   remove(id: string) {
     const idx = this.users.findIndex((item) => item.id === id);
-    if (idx === -1) throw new Error('Not found');
+    if (idx === -1) throw new Error('entity not found');
     this.users.splice(idx, 1);
   }
 }
