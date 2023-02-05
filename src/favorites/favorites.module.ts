@@ -7,7 +7,11 @@ import { TracksModule } from 'src/tracks/tracks.module';
 import { AlbumsModule } from 'src/albums/albums.module';
 
 @Module({
-  imports: [ArtistsModule, TracksModule, forwardRef(() => AlbumsModule)],
+  imports: [
+    ArtistsModule,
+    forwardRef(() => TracksModule),
+    forwardRef(() => AlbumsModule),
+  ],
   controllers: [FavoritesController],
   providers: [FavoritesService, InMemoryFavoritesDB],
   exports: [InMemoryFavoritesDB],
