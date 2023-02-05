@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InMemoryArtistsDb } from 'src/artists/db/in-memory-artists.db';
-import { InMemoryUserDb } from './db/in-memory-users.db';
+import { InMemoryUsersDB } from './db/in-memory-users.db';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -9,10 +8,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private usersDB: InMemoryUserDb,
-    private artistsDb: InMemoryArtistsDb,
-  ) {}
+  constructor(private usersDB: InMemoryUsersDB) {}
 
   create(createUserDto: CreateUserDto) {
     const newUser: User = {

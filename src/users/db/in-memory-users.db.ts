@@ -3,23 +3,12 @@ import { UsersDB } from '../interfaces/users-db.interface';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class InMemoryUserDb implements UsersDB {
+export class InMemoryUsersDB implements UsersDB {
   private users: User[];
 
   constructor() {
     this.users = [];
   }
-
-  // private users: User[] = [
-  //   {
-  //     id: '390eeca6-1ae1-45ea-9cdb-71065b110825',
-  //     login: 'john',
-  //     password: 'ajshnenw',
-  //     version: 0,
-  //     createdAt: 111111111,
-  //     updatedAt: 222222222,
-  //   },
-  // ];
 
   create(user: User) {
     this.users.push(user);

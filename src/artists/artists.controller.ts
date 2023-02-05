@@ -6,6 +6,11 @@ import {
   Patch,
   Param,
   Delete,
+  ParseUUIDPipe,
+  HttpException,
+  HttpStatus,
+  Put,
+  HttpCode,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -26,17 +31,45 @@ export class ArtistsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.artistsService.findOne(+id);
+  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      return this.artistsService.findOne(id);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      } else {
+        throw err;
+      }
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) {
-    return this.artistsService.update(+id, updateArtistDto);
+  @Put(':id')
+  update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() updateArtistDto: UpdateArtistDto,
+  ) {
+    try {
+      return this.artistsService.update(id, updateArtistDto);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      } else {
+        throw err;
+      }
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.artistsService.remove(id);
+  @HttpCode(204)
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      this.artistsService.remove(id);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      } else {
+        throw err;
+      }
+    }
   }
 }

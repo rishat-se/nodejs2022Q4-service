@@ -29,11 +29,7 @@ export class UsersController {
 
   @Get()
   findAll() {
-    try {
-      const users = this.usersService.findAll();
-      console.log(users);
-      return users;
-    } catch {}
+    return this.usersService.findAll();
   }
 
   @Get(':id')

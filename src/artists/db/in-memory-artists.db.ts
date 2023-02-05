@@ -1,24 +1,17 @@
-import { CreateArtistDto } from '../dto/create-artist.dto';
 import { Artist } from '../entities/artist.entity';
-import { v4 as uuidv4 } from 'uuid';
 import { ArtistsDb } from '../interfaces/artists-db.interface';
 import { Injectable } from '@nestjs/common';
-import { UpdatePasswordDto } from 'src/users/dto/update-password.dto';
 
 @Injectable()
 export class InMemoryArtistsDb implements ArtistsDb {
-  //private artists: Artist[];
+  private artists: Artist[];
 
-  private artists: Artist[] = [
-    {
-      id: 'artistId',
-      name: 'Kate Winslet',
-      grammy: true,
-    },
-  ];
+  constructor() {
+    this.artists = [];
+  }
 
-  create(createArtistDto: CreateArtistDto) {
-    return 'some text';
+  create(artist: Artist) {
+    this.artists.push(artist);
   }
 
   findAll() {
@@ -26,17 +19,18 @@ export class InMemoryArtistsDb implements ArtistsDb {
   }
 
   findOne(id: string) {
-    return this.artists.find((key) => key.id === id);
+    return this.artists.find((item) => item.id === id);
   }
 
-  update(id: string, updateUserDto: UpdatePasswordDto) {
-    const user = this.artists.find((key) => key.id === id);
-    return { ...user, ...updateUserDto };
+  update(artist: Artist) {
+    const idx = this.artists.findIndex((item) => item.id === artist.id);
+    if (idx === -1) throw new Error('entity not found');
+    this.artists.splice(idx, 1, artist);
   }
 
   remove(id: string) {
     const idx = this.artists.findIndex((item) => item.id === id);
+    if (idx === -1) throw new Error('entity not found');
     this.artists.splice(idx, 1);
-    //    return `This action removes a #${id} user`;
   }
 }
