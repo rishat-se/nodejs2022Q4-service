@@ -8,7 +8,7 @@ import { AlbumsModule } from 'src/albums/albums.module';
 
 @Module({
   imports: [
-    ArtistsModule,
+    forwardRef(() => ArtistsModule),
     forwardRef(() => TracksModule),
     forwardRef(() => AlbumsModule),
   ],

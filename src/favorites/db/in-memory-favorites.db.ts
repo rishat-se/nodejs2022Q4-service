@@ -22,15 +22,15 @@ export class InMemoryFavoritesDB {
   }
 
   findArtist(id: string) {
-    return this.favorites.artists.find((id) => id === id);
+    return this.favorites.artists.find((item) => item === id);
   }
 
   findTrack(id: string) {
-    return this.favorites.tracks.find((id) => id === id);
+    return this.favorites.tracks.find((item) => item === id);
   }
 
   findAlbum(id: string) {
-    return this.favorites.albums.find((id) => id === id);
+    return this.favorites.albums.find((item) => item === id);
   }
 
   addArtist(id: string) {

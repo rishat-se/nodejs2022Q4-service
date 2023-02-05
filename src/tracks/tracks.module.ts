@@ -10,7 +10,7 @@ import { AlbumsModule } from 'src/albums/albums.module';
   imports: [
     forwardRef(() => FavoritesModule),
     forwardRef(() => AlbumsModule),
-    ArtistsModule,
+    forwardRef(() => ArtistsModule),
   ],
   controllers: [TracksController],
   providers: [TracksService, InMemoryTracksDB],

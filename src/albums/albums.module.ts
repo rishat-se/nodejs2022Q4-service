@@ -9,7 +9,7 @@ import { FavoritesModule } from 'src/favorites/favorites.module';
 
 @Module({
   imports: [
-    ArtistsModule,
+    forwardRef(() => ArtistsModule),
     forwardRef(() => TracksModule),
     forwardRef(() => FavoritesModule),
   ],
