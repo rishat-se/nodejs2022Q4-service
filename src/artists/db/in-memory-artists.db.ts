@@ -1,9 +1,8 @@
 import { Artist } from '../entities/artist.entity';
-import { ArtistsDb } from '../interfaces/artists-db.interface';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class InMemoryArtistsDb implements ArtistsDb {
+export class InMemoryArtistsDB {
   private artists: Artist[];
 
   constructor() {

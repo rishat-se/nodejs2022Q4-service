@@ -25,6 +25,14 @@ export class InMemoryFavoritesDB {
     return this.favorites.artists.find((id) => id === id);
   }
 
+  findTrack(id: string) {
+    return this.favorites.tracks.find((id) => id === id);
+  }
+
+  findAlbum(id: string) {
+    return this.favorites.albums.find((id) => id === id);
+  }
+
   addArtist(id: string) {
     this.favorites.artists.push(id);
   }
@@ -35,13 +43,23 @@ export class InMemoryFavoritesDB {
     this.favorites.artists.splice(idx, 1);
   }
 
-  // findOne(id: string) {
-  //   return this.favorites.find((item) => item.id === id);
-  // }
+  addTrack(id: string) {
+    this.favorites.tracks.push(id);
+  }
 
-  // update(user: User) {
-  //   const idx = this.favorites.findIndex((item) => item.id === user.id);
-  //   if (idx === -1) throw new Error('entity not found');
-  //   this.favorites.splice(idx, 1, user);
-  // }
+  removeTrack(id: string) {
+    const idx = this.favorites.tracks.findIndex((item) => item === id);
+    if (idx === -1) throw new Error('entity not found');
+    this.favorites.tracks.splice(idx, 1);
+  }
+
+  addAlbum(id: string) {
+    this.favorites.albums.push(id);
+  }
+
+  removeAlbum(id: string) {
+    const idx = this.favorites.albums.findIndex((item) => item === id);
+    if (idx === -1) throw new Error('entity not found');
+    this.favorites.albums.splice(idx, 1);
+  }
 }

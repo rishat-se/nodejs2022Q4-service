@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InMemoryArtistsDb } from './db/in-memory-artists.db';
+import { InMemoryArtistsDB } from './db/in-memory-artists.db';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './entities/artist.entity';
@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ArtistsService {
-  constructor(private artistsDB: InMemoryArtistsDb) {}
+  constructor(private artistsDB: InMemoryArtistsDB) {}
 
   create(createArtistDto: CreateArtistDto) {
     const newArtist: Artist = {

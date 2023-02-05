@@ -6,5 +6,6 @@ import { InMemoryTracksDB } from './db/in-memory-tracks.db';
 @Module({
   controllers: [TracksController],
   providers: [TracksService, InMemoryTracksDB],
+  exports: [InMemoryTracksDB],
 })
 export class TracksModule {}

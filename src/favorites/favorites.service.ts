@@ -1,26 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { InMemoryArtistsDb } from 'src/artists/db/in-memory-artists.db';
+import { InMemoryAlbumsDB } from 'src/albums/db/in-memory-albums.db';
+import { InMemoryArtistsDB } from 'src/artists/db/in-memory-artists.db';
+import { InMemoryTracksDB } from 'src/tracks/db/in-memory-tracks.db';
 import { InMemoryFavoritesDB } from './db/in-memory-favorites.db';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 
 @Injectable()
 export class FavoritesService {
   constructor(
     private favoritesDB: InMemoryFavoritesDB,
-    private artistsDb: InMemoryArtistsDb,
+    private artistsDB: InMemoryArtistsDB,
+    private tracksDB: InMemoryTracksDB,
+    private albumsDB: InMemoryAlbumsDB,
   ) {}
 
   findAll() {
     const favorites = this.favoritesDB.findAll();
     const favoritesEntities = {
-      artists: favorites.artists.map((id) => this.artistsDb.findOne(id)),
+      artists: favorites.artists.map((id) => this.artistsDB.findOne(id)),
     };
     return favoritesEntities;
   }
 
   addArtist(id: string) {
-    const artist = this.artistsDb.findOne(id);
+    const artist = this.artistsDB.findOne(id);
     if (!artist) throw new Error('entity not found');
     // const artistInFavs = this.favoritesDB.findArtist(id);
     // if (artistInFavs) throw new Error('id already exists');
@@ -31,15 +33,23 @@ export class FavoritesService {
     this.favoritesDB.removeArtist(id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} favorite`;
+  addTrack(id: string) {
+    const track = this.tracksDB.findOne(id);
+    if (!track) throw new Error('entity not found');
+    this.favoritesDB.addTrack(id);
   }
 
-  update(id: number, updateFavoriteDto: UpdateFavoriteDto) {
-    return `This action updates a #${id} favorite`;
+  removeTrack(id: string) {
+    this.favoritesDB.removeTrack(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} favorite`;
+  addAlbum(id: string) {
+    const track = this.albumsDB.findOne(id);
+    if (!track) throw new Error('entity not found');
+    this.favoritesDB.addAlbum(id);
+  }
+
+  removeAlbum(id: string) {
+    this.favoritesDB.removeAlbum(id);
   }
 }
