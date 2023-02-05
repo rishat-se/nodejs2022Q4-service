@@ -21,7 +21,15 @@ export class AlbumsController {
 
   @Post()
   create(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.albumsService.create(createAlbumDto);
+    try {
+      return this.albumsService.create(createAlbumDto);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'field is incorrect') {
+        throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
+      } else {
+        throw err;
+      }
+    }
   }
 
   @Get()
@@ -52,6 +60,8 @@ export class AlbumsController {
     } catch (err) {
       if (err instanceof Error && err.message === 'entity not found') {
         throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      } else if (err instanceof Error && err.message === 'field is incorrect') {
+        throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
       } else {
         throw err;
       }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InMemoryAlbumsDB } from 'src/albums/db/in-memory-albums.db';
 import { InMemoryArtistsDB } from 'src/artists/db/in-memory-artists.db';
 import { InMemoryTracksDB } from 'src/tracks/db/in-memory-tracks.db';
@@ -17,6 +17,8 @@ export class FavoritesService {
     const favorites = this.favoritesDB.findAll();
     const favoritesEntities = {
       artists: favorites.artists.map((id) => this.artistsDB.findOne(id)),
+      albums: favorites.albums.map((id) => this.albumsDB.findOne(id)),
+      tracks: favorites.tracks.map((id) => this.tracksDB.findOne(id)),
     };
     return favoritesEntities;
   }
@@ -30,6 +32,9 @@ export class FavoritesService {
   }
 
   removeArtist(id: string) {
+    //check if artist present in favorites
+    const artist = this.favoritesDB.findArtist(id);
+    if (!artist) throw new Error('entity not found');
     this.favoritesDB.removeArtist(id);
   }
 

@@ -9,17 +9,21 @@ import {
   ParseUUIDPipe,
   HttpException,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
+  @Get()
+  findAll() {
+    return this.favoritesService.findAll();
+  }
+
   @Post('artist/:id')
-  create(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  addArtist(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       return this.favoritesService.addArtist(id);
     } catch (err) {
@@ -36,26 +40,77 @@ export class FavoritesController {
     }
   }
 
-  @Get()
-  findAll() {
-    return this.favoritesService.findAll();
+  @Delete('artist/:id')
+  @HttpCode(204)
+  removeArtist(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      this.favoritesService.removeArtist(id);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      } else {
+        throw err;
+      }
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.favoritesService.findOne(+id);
+  @Post('track/:id')
+  addTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      return this.favoritesService.addTrack(id);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException(
+          'user not found',
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      } else {
+        throw err;
+      }
+    }
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateFavoriteDto: UpdateFavoriteDto,
-  ) {
-    return this.favoritesService.update(+id, updateFavoriteDto);
+  @Delete('track/:id')
+  @HttpCode(204)
+  removeTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      this.favoritesService.removeTrack(id);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      } else {
+        throw err;
+      }
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.favoritesService.remove(+id);
+  @Post('album/:id')
+  addAlbum(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      return this.favoritesService.addAlbum(id);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException(
+          'user not found',
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  @Delete('album/:id')
+  @HttpCode(204)
+  removeAlbum(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      this.favoritesService.removeAlbum(id);
+    } catch (err) {
+      if (err instanceof Error && err.message === 'entity not found') {
+        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      } else {
+        throw err;
+      }
+    }
   }
 }
