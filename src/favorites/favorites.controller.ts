@@ -25,11 +25,9 @@ export class FavoritesController {
     try {
       return this.favoritesService.addArtist(id);
     } catch (err) {
-      // if (err instanceof Error && err.message === 'id already exists') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
       if (err instanceof Error && err.message === 'entity not found') {
         throw new HttpException(
-          'user not found',
+          'artist not found',
           HttpStatus.UNPROCESSABLE_ENTITY,
         );
       } else {
@@ -45,7 +43,7 @@ export class FavoritesController {
       this.favoritesService.removeArtist(id);
     } catch (err) {
       if (err instanceof Error && err.message === 'entity not found') {
-        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('artist not found', HttpStatus.NOT_FOUND);
       } else {
         throw err;
       }
@@ -59,7 +57,7 @@ export class FavoritesController {
     } catch (err) {
       if (err instanceof Error && err.message === 'entity not found') {
         throw new HttpException(
-          'user not found',
+          'track not found',
           HttpStatus.UNPROCESSABLE_ENTITY,
         );
       } else {
@@ -75,7 +73,7 @@ export class FavoritesController {
       this.favoritesService.removeTrack(id);
     } catch (err) {
       if (err instanceof Error && err.message === 'entity not found') {
-        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('track not found', HttpStatus.NOT_FOUND);
       } else {
         throw err;
       }
@@ -89,7 +87,7 @@ export class FavoritesController {
     } catch (err) {
       if (err instanceof Error && err.message === 'entity not found') {
         throw new HttpException(
-          'user not found',
+          'album not found',
           HttpStatus.UNPROCESSABLE_ENTITY,
         );
       } else {
@@ -105,7 +103,7 @@ export class FavoritesController {
       this.favoritesService.removeAlbum(id);
     } catch (err) {
       if (err instanceof Error && err.message === 'entity not found') {
-        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('album not found', HttpStatus.NOT_FOUND);
       } else {
         throw err;
       }
