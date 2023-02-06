@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InMemoryUsersDB } from './db/in-memory-users.db';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -14,7 +13,7 @@ export class UsersService {
     const newUser: User = {
       id: uuidv4(),
       ...createUserDto,
-      version: 0,
+      version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };

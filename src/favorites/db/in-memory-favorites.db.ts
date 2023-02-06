@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Artist } from 'src/artists/entities/artist.entity';
 
 @Injectable()
 export class InMemoryFavoritesDB {
