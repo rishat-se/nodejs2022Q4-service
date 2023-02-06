@@ -10,7 +10,6 @@ import {
   HttpStatus,
   Put,
   HttpCode,
-  Header,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';

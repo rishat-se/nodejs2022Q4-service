@@ -1,9 +1,8 @@
 import { User } from '../entities/user.entity';
-import { UsersDB } from '../interfaces/users-db.interface';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class InMemoryUsersDB implements UsersDB {
+export class InMemoryUsersDB {
   private users: User[];
 
   constructor() {
