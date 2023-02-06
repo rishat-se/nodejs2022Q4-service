@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { Favorites } from '../entities/favorites.entity';
 
 @Injectable()
 export class InMemoryFavoritesDB {
-  private favorites: {
-    artists: string[];
-    albums: string[];
-    tracks: string[];
-  };
+  private favorites: Favorites;
 
   constructor() {
     this.favorites = {
