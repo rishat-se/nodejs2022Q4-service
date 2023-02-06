@@ -14,5 +14,5 @@ export class CreateArtistDto {
 
   @IsOptional()
   @IsBoolean()
-  grammy: boolean;
+  grammy?: boolean;
 }

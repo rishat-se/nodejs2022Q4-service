@@ -19,7 +19,7 @@ export class CreateAlbumDto {
   @IsInt()
   @Min(1)
   @Max(2030)
-  year: number;
+  year?: number;
 
   @IsOptional()
   @IsUUID('4')
