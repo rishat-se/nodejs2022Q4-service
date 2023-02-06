@@ -8,7 +8,7 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/rishat-se/nodejs2022Q4-service.git
 ```
 
 ## Installing NPM modules
@@ -16,6 +16,11 @@ git clone {repository URL}
 ```
 npm install
 ```
+
+## Configure
+
+rename .env.example to .env
+Without .env the app will start on default port 4000.
 
 ## Running application
 
@@ -41,18 +46,6 @@ To run only one of all test suites
 
 ```
 npm run test -- <path to suite>
-```
-
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
 ```
 
 ### Auto-fix and format
