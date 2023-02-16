@@ -5,8 +5,11 @@ name: homelib
 services:
 
   node:
-    build: .
-    image: homelib-node-app
+    image: homelib-node
+    build: 
+      context: .
+      tags:
+        - rishatse/home-library:node
     ports:
       - ${PORT}:${PORT}
     depends_on:
@@ -16,8 +19,11 @@ services:
     restart: on-failure
 
   postgres:
-    build: ./database
     image: homelib-postgres
+    build: 
+      context: ./database
+      tags:
+        - rishatse/home-library:postgres
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     networks:
@@ -38,7 +44,7 @@ volumes:
 networks:
   userdef-net:
     driver: bridge
-    name: node-net
+    name: homelib-net
     ipam:
       config:
         - subnet: 172.20.0.0/24
