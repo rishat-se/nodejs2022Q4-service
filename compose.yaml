@@ -17,6 +17,8 @@ services:
     networks:
       - userdef-net
     restart: on-failure
+    volumes:
+      - ./src:/usr/local/app/src
 
   postgres:
     image: homelib-postgres
