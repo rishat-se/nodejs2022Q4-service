@@ -24,13 +24,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
@@ -42,9 +42,8 @@ export class UsersController {
         if (err.code === 'P2025') {
           throw new HttpException('user not found', HttpStatus.NOT_FOUND);
         }
-      } else {
-        throw err;
       }
+      throw err;
     }
   }
 
@@ -79,9 +78,8 @@ export class UsersController {
         if (err.code === 'P2025') {
           throw new HttpException('user not found', HttpStatus.NOT_FOUND);
         }
-      } else {
-        throw err;
       }
+      throw err;
     }
   }
 }

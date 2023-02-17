@@ -14,6 +14,7 @@ import {
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
+import { Prisma } from '@prisma/client';
 
 @Controller('track')
 export class TracksController {
@@ -21,65 +22,96 @@ export class TracksController {
 
   @Post()
   //  @Header('content-type', 'application/json')
-  create(@Body() createTrackDto: CreateTrackDto) {
+  async create(@Body() createTrackDto: CreateTrackDto) {
     try {
-      return this.tracksService.create(createTrackDto);
+      return await this.tracksService.create(createTrackDto);
     } catch (err) {
-      if (err instanceof Error && err.message === 'field is incorrect') {
-        throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
-      } else {
-        throw err;
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === 'P2003') {
+          throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
+        }
       }
+      throw err;
+
+      // if (err instanceof Error && err.message === 'field is incorrect') {
+      //   throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
+      // } else {
+      //   throw err;
+      // }
     }
   }
 
   @Get()
-  findAll() {
-    return this.tracksService.findAll();
+  async findAll() {
+    return await this.tracksService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      return this.tracksService.findOne(id);
+      return await this.tracksService.findOne(id);
     } catch (err) {
-      if (err instanceof Error && err.message === 'entity not found') {
-        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      } else {
-        throw err;
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === 'P2025') {
+          throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+        }
       }
+      throw err;
+
+      // if (err instanceof Error && err.message === 'entity not found') {
+      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      // } else {
+      //   throw err;
+      // }
     }
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
     try {
-      return this.tracksService.update(id, updateTrackDto);
+      return await this.tracksService.update(id, updateTrackDto);
     } catch (err) {
-      if (err instanceof Error && err.message === 'entity not found') {
-        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      } else if (err instanceof Error && err.message === 'field is incorrect') {
-        throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
-      } else {
-        throw err;
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === 'P2003') {
+          throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
+        }
+        if (err.code === 'P2025') {
+          throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+        }
       }
+      throw err;
+
+      // if (err instanceof Error && err.message === 'entity not found') {
+      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      // } else if (err instanceof Error && err.message === 'field is incorrect') {
+      //   throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
+      // } else {
+      //   throw err;
+      // }
     }
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      this.tracksService.remove(id);
+      await this.tracksService.remove(id);
     } catch (err) {
-      if (err instanceof Error && err.message === 'entity not found') {
-        throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      } else {
-        throw err;
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === 'P2025') {
+          throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+        }
       }
+      throw err;
+
+      // if (err instanceof Error && err.message === 'entity not found') {
+      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+      // } else {
+      //   throw err;
+      // }
     }
   }
 }
