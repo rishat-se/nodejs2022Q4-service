@@ -19,6 +19,9 @@ services:
     restart: on-failure
     volumes:
       - ./src:/usr/local/app/src
+      - ./prisma:/usr/local/app/prisma
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/homelibrary?schema=public"
 
   postgres:
     image: homelib-postgres

@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// export class User {
+//   id: string; // uuid v4
+//   login: string;
+//   password: string;
+//   version?: number; // integer number, increments on update
+//   createdAt?: number; // timestamp of creation
+//   updatedAt?: number; // timestamp of last update
+// }
+
+model User {
+  id        String  @id @default(uuid()) // uuid v4
+  login     String  @db.VarChar(20)
+  password  String  @db.VarChar(20)
+  version   Int? // integer number, increments on update
+  createdAt String? // timestamp of creation
+  updatedAt String? // timestamp of last update
+}
+
+// model Artist {
+//   id string; // uuid v4
+//   name: string;
+//   grammy?: boolean;
+// }
+
+model Artist {
+  id     String       @id @default(uuid()) // uuid v4
+  name   String       @db.VarChar(100)
+  grammy Boolean?
+  albums Album[]
+  tracks Track[]
+  favs   FavsArtists?
+}
+
+// export class Album {
+//   id: string; // uuid v4
+//   name: string;
+//   year?: number;
+//   artistId?: string | null; // refers to Artist
+// }
+
+model Album {
+  id       String      @id @default(uuid()) // uuid v4
+  name     String      @db.VarChar(100)
+  year     Int?
+  artist   Artist?     @relation(fields: [artistId], references: [id])
+  artistId String? // refers to Artist
+  tracks   Track[]
+  favs     FavsAlbums?
+}
+
+// export class Track {
+//   id: string; // uuid v4
+//   name: string;
+//   artistId?: string | null; // refers to Artist
+//   albumId?: string | null; // refers to Album
+//   duration: number; // integer numbe
+// }
+
+model Track {
+  id       String      @id @default(uuid()) // uuid v4
+  name     String      @db.VarChar(100)
+  artist   Artist?     @relation(fields: [artistId], references: [id])
+  artistId String? // refers to Artist
+  album    Album?      @relation(fields: [albumId], references: [id])
+  albumId  String? // refers to Album
+  duration Int // integer number
+  favs     FavsTracks?
+}
+
+// export class Favorites {
+//   artists: string[];
+//   albums: string[];
+//   tracks: string[];
+// }
+
+model FavsArtists {
+  artist   Artist @relation(fields: [artistId], references: [id])
+  artistId String @unique //@db.VarChar(36)
+}
+
+model FavsAlbums {
+  album   Album  @relation(fields: [albumId], references: [id])
+  albumId String @unique //@db.VarChar(36)
+}
+
+model FavsTracks {
+  track   Track  @relation(fields: [trackId], references: [id])
+  trackId String @unique //@db.VarChar(36)
+}
