@@ -21,7 +21,6 @@ export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Post()
-  //  @Header('content-type', 'application/json')
   async create(@Body() createTrackDto: CreateTrackDto) {
     try {
       return await this.tracksService.create(createTrackDto);
@@ -32,12 +31,6 @@ export class TracksController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'field is incorrect') {
-      //   throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 
@@ -57,12 +50,6 @@ export class TracksController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 
@@ -83,14 +70,6 @@ export class TracksController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else if (err instanceof Error && err.message === 'field is incorrect') {
-      //   throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 
@@ -106,12 +85,6 @@ export class TracksController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 }

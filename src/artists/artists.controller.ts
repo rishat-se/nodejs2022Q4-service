@@ -41,12 +41,6 @@ export class ArtistsController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 
@@ -64,12 +58,6 @@ export class ArtistsController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 
@@ -85,12 +73,6 @@ export class ArtistsController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 }
