@@ -31,12 +31,6 @@ export class AlbumsController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'field is incorrect') {
-      //   throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 
@@ -56,12 +50,6 @@ export class AlbumsController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 
@@ -82,14 +70,6 @@ export class AlbumsController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else if (err instanceof Error && err.message === 'field is incorrect') {
-      //   throw new HttpException('field is incorrect', HttpStatus.BAD_REQUEST);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 
@@ -105,12 +85,6 @@ export class AlbumsController {
         }
       }
       throw err;
-
-      // if (err instanceof Error && err.message === 'entity not found') {
-      //   throw new HttpException('user not found', HttpStatus.NOT_FOUND);
-      // } else {
-      //   throw err;
-      // }
     }
   }
 }
