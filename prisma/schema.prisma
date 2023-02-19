@@ -10,15 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// export class User {
-//   id: string; // uuid v4
-//   login: string;
-//   password: string;
-//   version?: number; // integer number, increments on update
-//   createdAt?: number; // timestamp of creation
-//   updatedAt?: number; // timestamp of last update
-// }
-
 model User {
   id        String  @id @default(uuid()) // uuid v4
   login     String  @db.VarChar(20)
@@ -28,12 +19,6 @@ model User {
   updatedAt String? // timestamp of last update
 }
 
-// model Artist {
-//   id string; // uuid v4
-//   name: string;
-//   grammy?: boolean;
-// }
-
 model Artist {
   id     String       @id @default(uuid()) // uuid v4
   name   String       @db.VarChar(100)
@@ -42,13 +27,6 @@ model Artist {
   tracks Track[]
   favs   FavsArtists?
 }
-
-// export class Album {
-//   id: string; // uuid v4
-//   name: string;
-//   year?: number;
-//   artistId?: string | null; // refers to Artist
-// }
 
 model Album {
   id       String      @id @default(uuid()) // uuid v4
@@ -60,14 +38,6 @@ model Album {
   favs     FavsAlbums?
 }
 
-// export class Track {
-//   id: string; // uuid v4
-//   name: string;
-//   artistId?: string | null; // refers to Artist
-//   albumId?: string | null; // refers to Album
-//   duration: number; // integer numbe
-// }
-
 model Track {
   id       String      @id @default(uuid()) // uuid v4
   name     String      @db.VarChar(100)
@@ -78,12 +48,6 @@ model Track {
   duration Int // integer number
   favs     FavsTracks?
 }
-
-// export class Favorites {
-//   artists: string[];
-//   albums: string[];
-//   tracks: string[];
-// }
 
 model FavsArtists {
   artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)

@@ -8,7 +8,9 @@
   "scripts": {
     "docker:scan": "docker scan homelib-node & docker scan homelib-postgres",
     "docker:start": "docker compose up -d",
+    "docker:build": "docker compose build --no-cache",
     "docker:stop": "docker compose down",
+    "docker:restart": "docker compose restart",
     "prisma:migrate": "npx prisma migrate dev",
     "prebuild": "rimraf dist",
     "build": "nest build",
