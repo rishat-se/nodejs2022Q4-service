@@ -19,14 +19,13 @@ services:
     restart: on-failure
     volumes:
       - ./src:/usr/local/app/src
-      - ./prisma:/usr/local/app/prisma
+#      - ./prisma:/usr/local/app/prisma
     environment:
       PORT:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
 
   postgres:
     image: homelib-postgres
-#    command: sh -c "chown postgres /var/lib/postgresql/logs"
     command: postgres -c logging_collector=on
     build: 
       context: ./database
@@ -42,19 +41,9 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     volumes:
       - pg-data:/var/lib/postgresql/data
-#      - pg-logs:/var/lib/postgresql/logs
-#      - type: volume
-#        source: pg-data
-#        target: /var/lib/postgresql/data
-#      - type: volume
-#        source: pg-log
-#        target: /var/lib/postgresql/data/log
-
 
 volumes:
   pg-data:
-#  pg-logs:
-
 
 networks:
   userdef-net:
@@ -64,5 +53,4 @@ networks:
       config:
         - subnet: 172.20.0.0/24
           gateway: 172.20.0.1
-
 
