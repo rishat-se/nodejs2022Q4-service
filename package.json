@@ -6,9 +6,12 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "docker:scan": "docker scan homelib-node & docker scan homelib-postgres",
+    "docker:build": "docker compose build",
+    "docker:build:nocache": "docker compose build --no-cache",
     "docker:start": "docker compose up -d",
     "docker:stop": "docker compose down",
+    "docker:scan": "docker scan homelib-node & docker scan homelib-postgres",
+    "docker:restart": "docker compose restart",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
