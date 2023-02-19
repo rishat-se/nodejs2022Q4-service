@@ -3,5 +3,5 @@ WORKDIR /usr/local/app
 COPY package*.json .
 RUN npm install && npm cache clean --force
 COPY . .
-EXPOSE 4000
+EXPOSE ${PORT}
 CMD ["npm", "run", "start:migrate:dev"]
