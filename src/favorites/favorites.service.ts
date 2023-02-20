@@ -1,67 +1,79 @@
 import { Injectable } from '@nestjs/common';
-import { InMemoryAlbumsDB } from 'src/albums/db/in-memory-albums.db';
-import { InMemoryArtistsDB } from 'src/artists/db/in-memory-artists.db';
-import { InMemoryTracksDB } from 'src/tracks/db/in-memory-tracks.db';
-import { InMemoryFavoritesDB } from './db/in-memory-favorites.db';
+import { Album } from 'src/albums/entities/album.entity';
+import { Artist } from 'src/artists/entities/artist.entity';
+import { Track } from 'src/tracks/entities/track.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class FavoritesService {
-  constructor(
-    private favoritesDB: InMemoryFavoritesDB,
-    private artistsDB: InMemoryArtistsDB,
-    private tracksDB: InMemoryTracksDB,
-    private albumsDB: InMemoryAlbumsDB,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    const favorites = this.favoritesDB.findAll();
-    const favoritesEntities = {
-      artists: favorites.artists.map((id) => this.artistsDB.findOne(id)),
-      albums: favorites.albums.map((id) => this.albumsDB.findOne(id)),
-      tracks: favorites.tracks.map((id) => this.tracksDB.findOne(id)),
+  async findAll() {
+    const favorites: { artists: Artist[]; albums: Album[]; tracks: Track[] } = {
+      artists: [],
+      albums: [],
+      tracks: [],
     };
-    return favoritesEntities;
+    //retrieve all artists which are present in favorites
+    favorites.artists = (
+      await this.prisma.favsArtists.findMany({
+        select: {
+          artist: true,
+        },
+      })
+    ).map((item) => item.artist);
+    //retrieve all albums which are present in favorites
+    favorites.albums = (
+      await this.prisma.favsAlbums.findMany({
+        select: {
+          album: true,
+        },
+      })
+    ).map((item) => item.album);
+    //retrieve all tracks which are present in favorites
+    favorites.tracks = (
+      await this.prisma.favsTracks.findMany({
+        select: {
+          track: true,
+        },
+      })
+    ).map((item) => item.track);
+    return favorites;
   }
 
-  addArtist(id: string) {
-    //check if artist present in artistsDB
-    const artist = this.artistsDB.findOne(id);
-    if (!artist) throw new Error('entity not found');
-    //if artist is already in favs, do nothing
-    if (!this.favoritesDB.findArtist(id)) {
-      this.favoritesDB.addArtist(id);
-    }
+  async addArtist(id: string) {
+    await this.prisma.favsArtists.create({
+      data: { artistId: id },
+    });
   }
 
-  removeArtist(id: string) {
-    this.favoritesDB.removeArtist(id);
+  async removeArtist(id: string) {
+    await this.prisma.favsArtists.delete({
+      where: { artistId: id },
+    });
   }
 
-  addTrack(id: string) {
-    //check if track present in tracksDB
-    const track = this.tracksDB.findOne(id);
-    if (!track) throw new Error('entity not found');
-    //if track is already in favs, do nothing
-    if (!this.favoritesDB.findTrack(id)) {
-      this.favoritesDB.addTrack(id);
-    }
+  async addTrack(id: string) {
+    await this.prisma.favsTracks.create({
+      data: { trackId: id },
+    });
   }
 
-  removeTrack(id: string) {
-    this.favoritesDB.removeTrack(id);
+  async removeTrack(id: string) {
+    await this.prisma.favsTracks.delete({
+      where: { trackId: id },
+    });
   }
 
-  addAlbum(id: string) {
-    //check if album present in albumsDB
-    const track = this.albumsDB.findOne(id);
-    if (!track) throw new Error('entity not found');
-    //if album is already in favs, do nothing
-    if (!this.favoritesDB.findAlbum(id)) {
-      this.favoritesDB.addAlbum(id);
-    }
+  async addAlbum(id: string) {
+    await this.prisma.favsAlbums.create({
+      data: { albumId: id },
+    });
   }
 
-  removeAlbum(id: string) {
-    this.favoritesDB.removeAlbum(id);
+  async removeAlbum(id: string) {
+    await this.prisma.favsAlbums.delete({
+      where: { albumId: id },
+    });
   }
 }
