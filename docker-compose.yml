@@ -19,7 +19,7 @@ services:
     restart: on-failure
     volumes:
       - ./src:/usr/local/app/src
-#      - ./prisma:/usr/local/app/prisma
+      - ./prisma:/usr/local/app/prisma
     environment:
       PORT:
       LOG_COMMON_FILENAME:

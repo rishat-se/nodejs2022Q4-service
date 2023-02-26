@@ -4,15 +4,21 @@ import { User } from './entities/user.entity';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { plainToClass } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
+    const passwordHash = await bcrypt.hash(
+      createUserDto.password,
+      Number(process.env.CRYPT_SALT),
+    );
     const newUser = await this.prisma.user.create({
       data: {
         ...createUserDto,
+        password: passwordHash,
         version: 1,
         createdAt: String(Date.now()),
         updatedAt: String(Date.now()),
@@ -38,7 +44,10 @@ export class UsersService {
       where: { id },
     });
     if (!user) throw new Error('entity not found');
-    if (user.password !== updateUserDto.oldPassword)
+
+    //    if (user.password !== updateUserDto.oldPassword)
+    console.log(updateUserDto.oldPassword, user.password);
+    if (!(await bcrypt.compare(updateUserDto.oldPassword, user.password)))
       throw new Error('old password is wrong');
     const updUser = { ...user, password: updateUserDto.newPassword };
     updUser.version++;

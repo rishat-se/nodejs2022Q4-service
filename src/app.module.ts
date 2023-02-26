@@ -11,6 +11,7 @@ import { LoggingModule } from './logging/logging.module';
 import { LoggingInterceptor } from './logging.interceptor';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { CustomExceptionFilter } from './exception-filter.filter';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CustomExceptionFilter } from './exception-filter.filter';
     AlbumsModule,
     PrismaModule,
     LoggingModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
