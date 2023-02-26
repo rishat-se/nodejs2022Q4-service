@@ -22,6 +22,10 @@ services:
 #      - ./prisma:/usr/local/app/prisma
     environment:
       PORT:
+      LOG_COMMON_FILENAME:
+      LOG_ERROR_FILENAME:
+      LOG_DIR:
+      LOGFILE_MAX_SIZE:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
 
   postgres:
