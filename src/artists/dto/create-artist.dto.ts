@@ -12,7 +12,7 @@ export class CreateArtistDto {
   @Length(3, 150)
   name: string;
 
-  @IsOptional()
+  //  @IsOptional()
   @IsBoolean()
   grammy?: boolean;
 }
