@@ -26,6 +26,7 @@ services:
       LOG_ERROR_FILENAME:
       LOG_DIR:
       LOGFILE_MAX_SIZE:
+      LOG_LEVEL:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
 
   postgres:

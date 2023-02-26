@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import * as fs from 'fs/promises';
 import { join } from 'path';
 import * as yaml from 'js-yaml';
+import { LoggingService } from './logging/logging.service';
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
@@ -22,7 +23,7 @@ async function bootstrap() {
     }),
   );
   SwaggerModule.setup('api', app, document as OpenAPIObject);
-
+  app.useLogger(app.get(LoggingService));
   await app.listen(PORT);
 }
 

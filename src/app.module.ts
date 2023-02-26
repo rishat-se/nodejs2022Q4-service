@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -8,7 +8,9 @@ import { TracksModule } from './tracks/tracks.module';
 import { AlbumsModule } from './albums/albums.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { LoggingModule } from './logging/logging.module';
-import { LoggingMiddleware } from './logging.middleware';
+import { LoggingInterceptor } from './logging.interceptor';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { CustomExceptionFilter } from './exception-filter.filter';
 
 @Module({
   imports: [
@@ -21,10 +23,22 @@ import { LoggingMiddleware } from './logging.middleware';
     LoggingModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: CustomExceptionFilter,
+    },
+  ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggingMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
+
+//  implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer.apply(LoggingMiddleware).forRoutes('*');
+//   }
+// }

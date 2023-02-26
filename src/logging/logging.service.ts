@@ -31,12 +31,12 @@ export class LoggingService implements LoggerService {
       debug: 4,
     };
     // set default log level
-    this.logLevel = this.levels.log;
+    this.logLevel = Number(process.env.LOG_LEVEL);
   }
 
   async logCommonMessage(message: string, level: string) {
     const dateTime = new Date().toLocaleString('en-US');
-    message = `${dateTime} [${level}] ${message} \n`;
+    message = `${dateTime} ${level} ${message} \n`;
     process.stdout.write(message);
     try {
       await this.logCommonService.write(message);
@@ -48,7 +48,7 @@ export class LoggingService implements LoggerService {
   async error(message: any, ...optionalParams: any[]) {
     if (this.levels.error > this.logLevel) return;
     const dateTime = new Date().toLocaleString('en-US');
-    message = `${dateTime} [error] ${message} \n`;
+    message = `${dateTime} ERROR ${message} \n`;
     process.stdout.write(message);
     try {
       await this.logErrorService.write(message);
@@ -59,21 +59,21 @@ export class LoggingService implements LoggerService {
 
   async warn(message: any, ...optionalParams: any[]) {
     if (this.levels.warn > this.logLevel) return;
-    await this.logCommonMessage(message, 'warn');
+    await this.logCommonMessage(message, 'WARN');
   }
 
   async log(message: any, ...optionalParams: any[]) {
     if (this.levels.log > this.logLevel) return;
-    await this.logCommonMessage(message, 'log');
+    await this.logCommonMessage(message, 'LOG');
   }
 
   async verbose(message: any, ...optionalParams: any[]) {
     if (this.levels.verbose > this.logLevel) return;
-    await this.logCommonMessage(message, 'verbose');
+    await this.logCommonMessage(message, 'VERBOSE');
   }
   async debug(message: any, ...optionalParams: any[]) {
     if (this.levels.debug > this.logLevel) return;
-    await this.logCommonMessage(message, 'dubug');
+    await this.logCommonMessage(message, 'DEBUG');
   }
 
   setLogLevel(level: number) {

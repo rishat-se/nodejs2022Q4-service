@@ -30,6 +30,8 @@ export class UsersController {
 
   @Get()
   async findAll() {
+    throw new Error('Ups');
+    // Promise.reject('simple rejeceted promise');
     return await this.usersService.findAll();
   }
 
