@@ -1,5 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -7,7 +6,6 @@ import { plainToClass } from 'class-transformer';
 import { User } from './entities/user.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { Payload } from './entities/payload.entity';
 
 @Injectable()
@@ -50,12 +48,14 @@ export class AuthService {
     return this.createRefreshAccessToken(payload);
   }
 
-  async refresh(refreshTokenDto: string) {
-    const decode: Payload = this.jwtService.verify(refreshTokenDto, {
-      secret: process.env.JWT_SECRET_REFRESH_KEY,
-    });
+  refresh(refreshToken: string) {
+    let decode: Payload;
+    try {
+      decode = this.validateRefreshToken(refreshToken);
+    } catch (err) {
+      throw new HttpException('invalid refresh token', HttpStatus.FORBIDDEN);
+    }
     const payload = { userId: decode.userId, login: decode.login };
-    console.log(payload);
     return this.createRefreshAccessToken(payload);
   }
 

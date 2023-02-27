@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
     try {
       this.authService.validateAccessToken(token);
     } catch (err) {
-      throw new HttpException('invalid token', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('invalid access token', HttpStatus.UNAUTHORIZED);
     }
     return true;
   }

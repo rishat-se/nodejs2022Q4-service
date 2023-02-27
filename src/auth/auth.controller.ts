@@ -1,11 +1,7 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseInterceptors,
   HttpException,
   HttpStatus,
@@ -50,16 +46,8 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
     try {
-      return await this.authService.refresh(refreshTokenDto.refreshToken);
+      return this.authService.refresh(refreshTokenDto.refreshToken);
     } catch (err) {
-      // if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      //   if (err.code === 'P2025') {
-      //     throw new HttpException('user not found', HttpStatus.FORBIDDEN);
-      //   }
-      // }
-      // if (err instanceof Error && err.message === 'password is wrong') {
-      //   throw new HttpException('password is wrong', HttpStatus.FORBIDDEN);
-      // }
       throw err;
     }
   }
