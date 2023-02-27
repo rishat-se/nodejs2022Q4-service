@@ -71,4 +71,16 @@ export class AuthService {
     });
     return { accessToken, refreshToken };
   }
+
+  validateAccessToken(token: string) {
+    return this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+  }
+
+  validateRefreshToken(token: string) {
+    return this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET_REFRESH_KEY,
+    });
+  }
 }
