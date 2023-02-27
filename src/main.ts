@@ -22,7 +22,7 @@ async function bootstrap() {
       encoding: 'utf-8',
     }),
   );
-  SwaggerModule.setup('api', app, document as OpenAPIObject);
+  SwaggerModule.setup('doc', app, document as OpenAPIObject);
   app.useLogger(app.get(LoggingService));
   await app.listen(PORT);
 }
