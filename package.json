@@ -8,7 +8,7 @@
   "scripts": {
     "start": "prisma migrate dev && npm run nest:start",
     "start:dev": "prisma migrate dev && npm run nest:start:dev",
-    "start:nodemon:dev": "nodemon --legacy-watch -x ts-node -r tsconfig-paths/register ./src/main.ts",
+    "start:nodemon:dev": "nodemon --legacy-watch --exitcrash -x ts-node -r tsconfig-paths/register ./src/main.ts",
     "docker:scan": "docker scan homelib-node & docker scan homelib-postgres",
     "docker:start": "docker compose up -d",
     "docker:build": "docker compose build",
