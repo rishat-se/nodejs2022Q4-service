@@ -20,6 +20,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       );
     });
   }
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -35,7 +36,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     const logMessage = `${method} ${url} ${JSON.stringify(
       query,
-    )} ${JSON.stringify(body)} ${status} ${message}`;
+    )} ${JSON.stringify(body)} ${status} ${JSON.stringify(message)}`;
     this.loggingService.error(logMessage);
 
     response.status(status).json({

@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Put,
   HttpCode,
+  SetMetadata,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
@@ -21,6 +22,7 @@ export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Post()
+  @SetMetadata('requireAuthentication', true)
   async create(@Body() createTrackDto: CreateTrackDto) {
     try {
       return await this.tracksService.create(createTrackDto);
@@ -35,11 +37,13 @@ export class TracksController {
   }
 
   @Get()
+  @SetMetadata('requireAuthentication', true)
   async findAll() {
     return await this.tracksService.findAll();
   }
 
   @Get(':id')
+  @SetMetadata('requireAuthentication', true)
   async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       return await this.tracksService.findOne(id);
@@ -54,6 +58,7 @@ export class TracksController {
   }
 
   @Put(':id')
+  @SetMetadata('requireAuthentication', true)
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
@@ -74,6 +79,7 @@ export class TracksController {
   }
 
   @Delete(':id')
+  @SetMetadata('requireAuthentication', true)
   @HttpCode(204)
   async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {

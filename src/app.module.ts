@@ -9,9 +9,11 @@ import { AlbumsModule } from './albums/albums.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { LoggingModule } from './logging/logging.module';
 import { LoggingInterceptor } from './logging.interceptor';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CustomExceptionFilter } from './exception-filter.filter';
 import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth.guard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -23,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
     PrismaModule,
     LoggingModule,
     AuthModule,
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [
@@ -34,6 +37,10 @@ import { AuthModule } from './auth/auth.module';
     {
       provide: APP_FILTER,
       useClass: CustomExceptionFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
 })
