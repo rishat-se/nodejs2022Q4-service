@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   HttpException,
   HttpStatus,
+  SetMetadata,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,11 +24,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
+  @SetMetadata('allowAnonymous', true)
   async signup(@Body() createAuthDto: CreateUserDto) {
     return await this.authService.signup(createAuthDto);
   }
 
   @Post('login')
+  @SetMetadata('allowAnonymous', true)
   async login(@Body() loginUserDto: LoginUserDto) {
     try {
       return await this.authService.login(loginUserDto);

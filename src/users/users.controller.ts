@@ -11,7 +11,6 @@ import {
   HttpCode,
   HttpStatus,
   UseInterceptors,
-  SetMetadata,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,7 +20,6 @@ import { Prisma } from '@prisma/client';
 
 @Controller('user')
 @UseInterceptors(UsersInterceptor)
-@SetMetadata('autheticated', true)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

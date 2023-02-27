@@ -13,11 +13,12 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest() as Request;
 
-    const requireAuthentication = this.reflector.get<boolean>(
-      'requireAuthentication',
+    const allowAnonymous = this.reflector.get<boolean>(
+      'allowAnonymous',
       context.getHandler(),
     );
-    if (requireAuthentication === undefined) return true;
+    console.log(allowAnonymous);
+    if (allowAnonymous) return true;
 
     const authHeader = request.get('authorization');
     if (!authHeader) return false;
