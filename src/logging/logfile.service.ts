@@ -1,45 +1,62 @@
 import { Injectable, Scope } from '@nestjs/common';
 import * as path from 'node:path';
 import * as fs from 'fs/promises';
+import {
+  CWD,
+  LOGFILE_MAX_SIZE,
+  LOG_COMMON_FILENAME,
+  LOG_DIR,
+  LOG_ERROR_FILENAME,
+} from 'src/common/constants';
 
 class LogfileService {
-  logfile: string;
+  logFile: string;
+  logFileSize: number;
+  logFileIndex: number;
+  logFileTemplate: string;
 
   async write(message: string) {
-    const curLogFile = await this.rotateLog(message.length);
-    await fs.writeFile(curLogFile, message, {
+    this.rotateLog(message.length);
+    this.logFileSize += message.length;
+    await fs.writeFile(this.logFile, message, {
       flag: 'a',
       encoding: 'utf8',
     });
   }
-  //
-  private async rotateLog(messageSize: number) {
-    const logDir = path.dirname(this.logfile);
-    const logFilename = path.basename(this.logfile);
-    // read list files in log dir
+
+  async initialize() {
+    const logDir = path.dirname(this.logFileTemplate);
+    const logBaseName = path.basename(this.logFileTemplate);
+    // read list of files in log dir
     const fileList = await fs.readdir(logDir);
-    // if empty return initial logfilename
-    if (fileList.length === 0) return `${this.logfile}.0`;
-    //search highest logfile index
-    let maxFileIndex = -1;
-    for (const file of fileList) {
-      if (file.includes(logFilename)) {
-        const fileIndex = Number(path.extname(file).substring(1));
-        if (typeof fileIndex === 'number') {
-          maxFileIndex = fileIndex > maxFileIndex ? fileIndex : maxFileIndex;
-        }
-      }
+    // find highest free log file index
+    const curLogFileIndex = fileList
+      .filter((file) => file.includes(logBaseName))
+      .map((file) => +path.extname(file).substring(1))
+      .filter((fileIndex) => typeof fileIndex === 'number')
+      .reduce(
+        (prevIndex, curIndex) => (curIndex > prevIndex ? curIndex : prevIndex),
+        -1,
+      );
+    //set logfile name and size
+    if (curLogFileIndex < 0) {
+      this.logFile = `${this.logFileTemplate}.0`;
+      this.logFileSize = 0;
+      this.logFileIndex = 0;
+    } else {
+      this.logFileIndex = curLogFileIndex;
+      this.logFile = `${this.logFileTemplate}.${this.logFileIndex}`;
+      const logFileStat = await fs.stat(`${this.logFile}`);
+      this.logFileSize = logFileStat.size;
     }
-    // if not found return initial logfilename
-    if (maxFileIndex < 0) return `${this.logfile}.0`;
-    //create current logfile
-    let curLogFile = `${this.logfile}.${maxFileIndex}`;
-    //check current logfile size
-    const stat = await fs.stat(curLogFile);
-    if (stat.size + messageSize > Number(process.env.LOGFILE_MAX_SIZE) * 1000) {
-      curLogFile = `${this.logfile}.${maxFileIndex + 1}`;
+  }
+
+  private rotateLog(messageSize: number) {
+    if (this.logFileSize + messageSize > LOGFILE_MAX_SIZE) {
+      this.logFileIndex++;
+      this.logFile = `${this.logFileTemplate}.${this.logFileIndex}`;
+      this.logFileSize = 0;
     }
-    return curLogFile;
   }
 }
 
@@ -47,11 +64,7 @@ class LogfileService {
 export class LogCommonService extends LogfileService {
   constructor() {
     super();
-    this.logfile = path.resolve(
-      process.cwd(),
-      process.env.LOG_DIR,
-      process.env.LOG_COMMON_FILENAME,
-    );
+    this.logFileTemplate = path.resolve(CWD, LOG_DIR, LOG_COMMON_FILENAME);
   }
 }
 
@@ -59,10 +72,6 @@ export class LogCommonService extends LogfileService {
 export class LogErrorService extends LogfileService {
   constructor() {
     super();
-    this.logfile = path.resolve(
-      process.cwd(),
-      process.env.LOG_DIR,
-      process.env.LOG_ERROR_FILENAME,
-    );
+    this.logFileTemplate = path.resolve(CWD, LOG_DIR, LOG_ERROR_FILENAME);
   }
 }

@@ -31,7 +31,12 @@ export class LoggingService implements LoggerService {
       debug: 4,
     };
     // set default log level
-    this.logLevel = Number(process.env.LOG_LEVEL);
+    this.logLevel = Number(process.env.LOG_LEVEL) || 2;
+  }
+
+  async initializeLogs() {
+    await this.logCommonService.initialize();
+    await this.logErrorService.initialize();
   }
 
   async logCommonMessage(message: string, level: string) {
