@@ -5,6 +5,7 @@ import {
   LoggerService,
   LogLevel,
 } from '@nestjs/common';
+import { LOG_LEVEL } from 'src/common/constants';
 import { LogCommonService, LogErrorService } from './logfile.service';
 
 @Injectable()
@@ -31,7 +32,7 @@ export class LoggingService implements LoggerService {
       debug: 4,
     };
     // set default log level
-    this.logLevel = Number(process.env.LOG_LEVEL) || 2;
+    this.logLevel = LOG_LEVEL;
   }
 
   async initializeLogs() {

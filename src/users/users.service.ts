@@ -5,6 +5,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { plainToClass } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
+import { CRYPT_SALT } from 'src/common/constants';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +14,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const passwordHash = await bcrypt.hash(
       createUserDto.password,
-      Number(process.env.CRYPT_SALT),
+      Number(CRYPT_SALT),
     );
     const newUser = await this.prisma.user.create({
       data: {

@@ -7,6 +7,13 @@ import { User } from './entities/user.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from './entities/payload.entity';
+import {
+  CRYPT_SALT,
+  JWT_SECRET_KEY,
+  JWT_SECRET_REFRESH_KEY,
+  TOKEN_EXPIRE_TIME,
+  TOKEN_REFRESH_EXPIRE_TIME,
+} from 'src/common/constants';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +25,7 @@ export class AuthService {
   async signup(createUserDto: CreateUserDto) {
     const passwordHash = await bcrypt.hash(
       createUserDto.password,
-      Number(process.env.CRYPT_SALT),
+      Number(CRYPT_SALT),
     );
 
     const newUser = await this.prisma.user.create({
@@ -61,26 +68,26 @@ export class AuthService {
 
   createRefreshAccessToken(payload: Payload) {
     const accessToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET_KEY,
-      expiresIn: process.env.TOKEN_EXPIRE_TIME,
+      secret: JWT_SECRET_KEY,
+      expiresIn: TOKEN_EXPIRE_TIME,
     });
 
     const refreshToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET_REFRESH_KEY,
-      expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+      secret: JWT_SECRET_REFRESH_KEY,
+      expiresIn: TOKEN_REFRESH_EXPIRE_TIME,
     });
     return { accessToken, refreshToken };
   }
 
   validateAccessToken(token: string) {
     return this.jwtService.verify(token, {
-      secret: process.env.JWT_SECRET_KEY,
+      secret: JWT_SECRET_KEY,
     });
   }
 
   validateRefreshToken(token: string) {
     return this.jwtService.verify(token, {
-      secret: process.env.JWT_SECRET_REFRESH_KEY,
+      secret: JWT_SECRET_REFRESH_KEY,
     });
   }
 }
