@@ -14,6 +14,7 @@ import {
   TOKEN_EXPIRE_TIME,
   TOKEN_REFRESH_EXPIRE_TIME,
 } from 'src/common/constants';
+import { Tokens } from './entities/tokens.entity';
 
 @Injectable()
 export class AuthService {
@@ -66,7 +67,7 @@ export class AuthService {
     return this.createRefreshAccessToken(payload);
   }
 
-  createRefreshAccessToken(payload: Payload) {
+  createRefreshAccessToken(payload: Payload): Tokens {
     const accessToken = this.jwtService.sign(payload, {
       secret: JWT_SECRET_KEY,
       expiresIn: TOKEN_EXPIRE_TIME,

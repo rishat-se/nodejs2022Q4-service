@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import './common/constants';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -17,13 +17,22 @@ async function bootstrap() {
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
 
-  // read static yaml document
-  const document = yaml.load(
-    await fs.readFile(join(process.cwd(), 'doc/api.yaml'), {
-      encoding: 'utf-8',
-    }),
-  );
-  SwaggerModule.setup('doc', app, document as OpenAPIObject);
+  // // read static yaml document
+  // const document = yaml.load(
+  //   await fs.readFile(join(process.cwd(), 'doc/api.yaml'), {
+  //     encoding: 'utf-8',
+  //   }),
+  // );
+  // SwaggerModule.setup('doc', app, document as OpenAPIObject);
+
+  const config = new DocumentBuilder()
+    .setTitle('Home Library Service')
+    .setDescription('Home music library service')
+    .setVersion('1.0.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('doc', app, document);
 
   //create log directory if it doesnt exist, initialize logger and pass it to app
   const fullLogPath = path.resolve(process.cwd(), LOG_DIR);

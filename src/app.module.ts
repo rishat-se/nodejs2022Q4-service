@@ -17,14 +17,14 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    UsersModule,
+    AuthModule,
+    AlbumsModule,
     ArtistsModule,
     FavoritesModule,
     TracksModule,
-    AlbumsModule,
+    UsersModule,
     PrismaModule,
     LoggingModule,
-    AuthModule,
     JwtModule,
   ],
   controllers: [AppController],

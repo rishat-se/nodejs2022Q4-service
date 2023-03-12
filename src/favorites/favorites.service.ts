@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Album } from 'src/albums/entities/album.entity';
-import { Artist } from 'src/artists/entities/artist.entity';
-import { Track } from 'src/tracks/entities/track.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Favorites } from './entities/favorites.entity';
 
 @Injectable()
 export class FavoritesService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    const favorites: { artists: Artist[]; albums: Album[]; tracks: Track[] } = {
+    const favorites: Favorites = {
       artists: [],
       albums: [],
       tracks: [],

@@ -11,16 +11,23 @@ import {
   HttpCode,
   Put,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
+@ApiBearerAuth()
+@ApiTags('Albums')
 @Controller('album')
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 
   @Post()
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
   async create(@Body() createAlbumDto: CreateAlbumDto) {
     try {
       return await this.albumsService.create(createAlbumDto);
@@ -40,6 +47,14 @@ export class AlbumsController {
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'album not found',
+  })
   async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       return await this.albumsService.findOne(id);
@@ -54,6 +69,14 @@ export class AlbumsController {
   }
 
   @Put(':id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'album not found',
+  })
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
@@ -75,6 +98,14 @@ export class AlbumsController {
 
   @Delete(':id')
   @HttpCode(204)
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'album not found',
+  })
   async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       await this.albumsService.remove(id);

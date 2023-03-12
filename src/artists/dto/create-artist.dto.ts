@@ -1,10 +1,4 @@
-import {
-  IsString,
-  IsBoolean,
-  IsOptional,
-  IsNotEmpty,
-  Length,
-} from 'class-validator';
+import { IsString, IsBoolean, IsNotEmpty, Length } from 'class-validator';
 
 export class CreateArtistDto {
   @IsNotEmpty()

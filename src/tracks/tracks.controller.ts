@@ -16,12 +16,19 @@ import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Prisma } from '@prisma/client';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('Tracks')
 @Controller('track')
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Post()
+  @ApiResponse({
+    status: 400,
+    description: 'invalid DTO',
+  })
   async create(@Body() createTrackDto: CreateTrackDto) {
     try {
       return await this.tracksService.create(createTrackDto);
@@ -41,6 +48,14 @@ export class TracksController {
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'track not found',
+  })
   async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       return await this.tracksService.findOne(id);
@@ -55,6 +70,14 @@ export class TracksController {
   }
 
   @Put(':id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'track not found',
+  })
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
@@ -76,6 +99,14 @@ export class TracksController {
 
   @Delete(':id')
   @HttpCode(204)
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'track not found',
+  })
   async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       await this.tracksService.remove(id);

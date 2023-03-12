@@ -27,14 +27,20 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const { url, method, query, body } = ctx.getRequest<Request>();
-    const excStatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-    const excMessage =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : String(exception);
+
+    let excStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    let excMessage = 'Internal Server Error';
+
+    if (exception instanceof HttpException) {
+      excStatus = exception.getStatus();
+
+      const excResponse = exception.getResponse();
+      if (typeof excResponse === 'object' && 'message' in excResponse) {
+        excMessage = String((excResponse as HttpException).message);
+      } else {
+        excMessage = String(excResponse);
+      }
+    }
 
     const logMessage = `${method} ${url} ${JSON.stringify(
       query,

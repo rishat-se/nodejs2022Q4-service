@@ -17,25 +17,39 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UsersInterceptor } from './users.interceptor';
 import { Prisma } from '@prisma/client';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from './entities/user.entity';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('user')
 @UseInterceptors(UsersInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @ApiResponse({
+    status: 400,
+    description: 'invalid DTO',
+  })
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
 
   @Get()
   async findAll() {
-    //    throw new Error('Ups');
-    // Promise.reject('simple rejected promise');
     return await this.usersService.findAll();
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'user not found',
+  })
   async findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       return await this.usersService.findOne(id);
@@ -50,6 +64,18 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'old password is wrong',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'user not found',
+  })
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateUserDto: UpdatePasswordDto,
@@ -72,6 +98,14 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(204)
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'user not found',
+  })
   async remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       await this.usersService.remove(id);
