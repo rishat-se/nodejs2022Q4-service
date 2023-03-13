@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest() as Request;
 
     const allowAnonymous = this.reflector.get<boolean>(
-      'allowAnonymous',
+      'allow-anonymous',
       context.getHandler(),
     );
     if (allowAnonymous) return true;

@@ -17,6 +17,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { Tokens } from './entities/tokens.entity';
+import { AllowAnonymous } from 'src/common/allow-anonymous.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -29,7 +30,8 @@ export class AuthController {
     status: 400,
     description: 'no login or password, or they are not a strings',
   })
-  @SetMetadata('allowAnonymous', true)
+  @AllowAnonymous(true)
+  //  @SetMetadata('allowAnonymous', true)
   async signup(@Body() createAuthDto: CreateUserDto) {
     return await this.authService.signup(createAuthDto);
   }
@@ -44,7 +46,8 @@ export class AuthController {
     status: 403,
     description: '  no user with such login, password doesnt match actual one',
   })
-  @SetMetadata('allowAnonymous', true)
+  @AllowAnonymous(true)
+  //  @SetMetadata('allowAnonymous', true)
   async login(@Body() loginUserDto: LoginUserDto) {
     try {
       return await this.authService.login(loginUserDto);
