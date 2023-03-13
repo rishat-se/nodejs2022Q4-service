@@ -13,7 +13,7 @@ datasource db {
 model User {
   id        String  @id @default(uuid()) // uuid v4
   login     String  @db.VarChar(20)
-  password  String  @db.VarChar(20)
+  password  String  @db.VarChar(100)
   version   Int? // integer number, increments on update
   createdAt String? // timestamp of creation
   updatedAt String? // timestamp of last update

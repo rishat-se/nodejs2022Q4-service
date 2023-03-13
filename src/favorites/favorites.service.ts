@@ -1,43 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { Album } from 'src/albums/entities/album.entity';
-import { Artist } from 'src/artists/entities/artist.entity';
-import { Track } from 'src/tracks/entities/track.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Favorites } from './entities/favorites.entity';
 
 @Injectable()
 export class FavoritesService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    const favorites: { artists: Artist[]; albums: Album[]; tracks: Track[] } = {
+    const favorites: Favorites = {
       artists: [],
       albums: [],
       tracks: [],
     };
-    //retrieve all artists which are present in favorites
-    favorites.artists = (
-      await this.prisma.favsArtists.findMany({
+
+    const [artists, albums, tracks] = await Promise.all([
+      this.prisma.favsArtists.findMany({
         select: {
           artist: true,
         },
-      })
-    ).map((item) => item.artist);
-    //retrieve all albums which are present in favorites
-    favorites.albums = (
-      await this.prisma.favsAlbums.findMany({
+      }),
+      this.prisma.favsAlbums.findMany({
         select: {
           album: true,
         },
-      })
-    ).map((item) => item.album);
-    //retrieve all tracks which are present in favorites
-    favorites.tracks = (
-      await this.prisma.favsTracks.findMany({
+      }),
+      this.prisma.favsTracks.findMany({
         select: {
           track: true,
         },
-      })
-    ).map((item) => item.track);
+      }),
+    ]);
+
+    favorites.artists = artists.map((item) => item.artist);
+    favorites.albums = albums.map((item) => item.album);
+    favorites.tracks = tracks.map((item) => item.track);
+
     return favorites;
   }
 

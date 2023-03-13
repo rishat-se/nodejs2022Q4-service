@@ -15,7 +15,7 @@ export class CreateAlbumDto {
   @Length(3, 150)
   name: string;
 
-  @IsOptional()
+  //  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(2030)

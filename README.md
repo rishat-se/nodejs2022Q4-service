@@ -16,7 +16,7 @@ cd nodejs2022Q4-service
 ```
 
 ```
-git checkout pg-dev
+git checkout auth-dev
 ```
 
 ```
@@ -44,20 +44,14 @@ npm run docker:start
 in Docker Desktop App through Container->App Container Name->Terminal run command:
 
 ```
-npm run test
+npm run test:auth
 ```
 
 or through console:
 
 ```
-docker exec <App Container Name or ID> npm run test
-```
-
-## Scanning for vulnerabilities
-
-```
-npm run docker:scan
+docker exec <App Container Name or ID> npm run test:auth
 ```
 
 After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation in Swagger UI by typing http://localhost:4000/api/
+in your browser OpenAPI documentation in Swagger UI by typing http://localhost:4000/doc/
