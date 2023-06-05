@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String  @id @default(uuid()) // uuid v4
+  login     String  @db.VarChar(20)
+  password  String  @db.VarChar(100)
+  version   Int? // integer number, increments on update
+  createdAt String? // timestamp of creation
+  updatedAt String? // timestamp of last update
+}
+
+model Artist {
+  id     String       @id @default(uuid()) // uuid v4
+  name   String       @db.VarChar(100)
+  grammy Boolean?
+  albums Album[]
+  tracks Track[]
+  favs   FavsArtists?
+}
+
+model Album {
+  id       String      @id @default(uuid()) // uuid v4
+  name     String      @db.VarChar(100)
+  year     Int?
+  artist   Artist?     @relation(fields: [artistId], references: [id])
+  artistId String? // refers to Artist
+  tracks   Track[]
+  favs     FavsAlbums?
+}
+
+model Track {
+  id       String      @id @default(uuid()) // uuid v4
+  name     String      @db.VarChar(100)
+  artist   Artist?     @relation(fields: [artistId], references: [id])
+  artistId String? // refers to Artist
+  album    Album?      @relation(fields: [albumId], references: [id])
+  albumId  String? // refers to Album
+  duration Int // integer number
+  favs     FavsTracks?
+}
+
+model FavsArtists {
+  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artistId String @unique //@db.VarChar(36)
+}
+
+model FavsAlbums {
+  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  albumId String @unique //@db.VarChar(36)
+}
+
+model FavsTracks {
+  track   Track  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  trackId String @unique //@db.VarChar(36)
+}
