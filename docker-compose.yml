@@ -1,0 +1,67 @@
+version: '3'
+
+name: homelib
+
+services:
+
+  node:
+    image: homelib-node
+    build: 
+      context: .
+      tags:
+        - rishatse/home-library:node
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    networks:
+      - userdef-net
+    restart: on-failure
+    volumes:
+      - ./src:/usr/local/app/src
+#      - ./prisma:/usr/local/app/prisma
+    environment:
+      PORT:
+      LOG_DIR:
+      LOG_COMMON_FILENAME:
+      LOG_ERROR_FILENAME:
+      LOGFILE_MAX_SIZE:
+      LOGFILE_MAX_COUNT:
+      LOG_LEVEL:
+      CRYPT_SALT:
+      JWT_SECRET_KEY:
+      JWT_SECRET_REFRESH_KEY:
+      TOKEN_EXPIRE_TIME:
+      TOKEN_REFRESH_EXPIRE_TIME:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
+
+  postgres:
+    image: homelib-postgres
+    command: postgres -c logging_collector=on
+    build: 
+      context: ./database
+      tags:
+        - rishatse/home-library:postgres
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    networks:
+      - userdef-net
+    restart: on-failure
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  pg-data:
+
+networks:
+  userdef-net:
+    driver: bridge
+    name: homelib-net
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
+

@@ -16,7 +16,7 @@ cd nodejs2022Q4-service
 ```
 
 ```
-git checkout dev
+git checkout auth-dev
 ```
 
 ```
@@ -26,23 +26,32 @@ npm install
 ## Configure
 
 rename .env.example to .env
-Note: without .env file, the app will start on default port 4000.
+
+## Build images
+
+```
+npm run docker:build
+```
 
 ## Running application
 
 ```
-npm start
+npm run docker:start
+```
+
+## Running test
+
+in Docker Desktop App through Container->App Container Name->Terminal run command:
+
+```
+npm run test:auth
+```
+
+or through console:
+
+```
+docker exec <App Container Name or ID> npm run test:auth
 ```
 
 After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation in Swagger UI by typing http://localhost:4000/api/
-
-## Testing
-
-After application running open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm run test
-```
+in your browser OpenAPI documentation in Swagger UI by typing http://localhost:4000/doc/

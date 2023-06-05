@@ -4,10 +4,10 @@ export class UpdatePasswordDto {
   @IsNotEmpty()
   @IsString()
   @Length(3, 20)
-  oldPassword: string; // previous password
+  oldPassword: string;
 
   @IsNotEmpty()
   @IsString()
   @Length(3, 20)
-  newPassword: string; // new password
+  newPassword: string;
 }
