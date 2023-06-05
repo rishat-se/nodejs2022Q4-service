@@ -44,7 +44,7 @@ npm run docker:start
 in Docker Desktop App through Container->App Container Name->Terminal run command:
 
 ```
-npm run test
+npm run docker:test
 ```
 
 or through console:
