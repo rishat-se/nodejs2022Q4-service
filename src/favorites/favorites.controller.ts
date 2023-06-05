@@ -9,9 +9,12 @@ import {
   HttpStatus,
   HttpCode,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { FavoritesService } from './favorites.service';
 
+@ApiBearerAuth()
+@ApiTags('Favorites')
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
@@ -22,6 +25,14 @@ export class FavoritesController {
   }
 
   @Post('artist/:id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'artist not found',
+  })
   async addArtist(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ) {
@@ -45,6 +56,14 @@ export class FavoritesController {
 
   @Delete('artist/:id')
   @HttpCode(204)
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'artist not found',
+  })
   async removeArtist(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ) {
@@ -61,6 +80,14 @@ export class FavoritesController {
   }
 
   @Post('track/:id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'track not found',
+  })
   async addTrack(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       return await this.favoritesService.addTrack(id);
@@ -82,6 +109,14 @@ export class FavoritesController {
 
   @Delete('track/:id')
   @HttpCode(204)
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'track not found',
+  })
   async removeTrack(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ) {
@@ -98,6 +133,14 @@ export class FavoritesController {
   }
 
   @Post('album/:id')
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'track not found',
+  })
   async addAlbum(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       return await this.favoritesService.addAlbum(id);
@@ -119,6 +162,14 @@ export class FavoritesController {
 
   @Delete('album/:id')
   @HttpCode(204)
+  @ApiResponse({
+    status: 400,
+    description: 'invalid id',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'album not found',
+  })
   async removeAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ) {
